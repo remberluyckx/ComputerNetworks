@@ -1,3 +1,5 @@
+package be.rember_arthur.computernetworks.lab02.server;
+
 import java.io.*;
 import java.net.*;
 
