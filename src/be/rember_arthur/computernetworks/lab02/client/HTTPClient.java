@@ -3,6 +3,7 @@ package be.rember_arthur.computernetworks.lab02.client;
 import com.oracle.tools.packager.IOUtils;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.*;
@@ -70,31 +71,34 @@ public class HTTPClient {
 
 					 InputStream imgStream = socket.getInputStream();
 
-					 BufferedImage imBuff = ImageIO.read(imgStream);
+					 /*BufferedImage imBuff = ImageIO.read(imgStream);
+
+					 Image img = ImageIO.read(imgStream);
+
+
 
 					 File outputfile = new File("image.png");
-					 ImageIO.write(imBuff, "png", outputfile);
+					 ImageIO.write(imBuff, "png", outputfile);*/
 
-					 /*File file = new File("imageJ.png");
+
+
+					 File file = new File("image.png");
 
 					 OutputStream outStream = new FileOutputStream(file);
 
 					 byte[] buffer = new byte[8 * 1024];
 					 int bytesRead;
 					 while ((bytesRead = imgStream.read(buffer)) != -1) {
-						 outStream.write(buffer, 0, bytesRead);
-					 }*/
+							 outStream.write(buffer, 333, bytesRead);
+					 }
 
 
-					 /*BufferedReader reader2 = new BufferedReader(new InputStreamReader(input2));
+					 /*BufferedReader reader2 = new BufferedReader(new InputStreamReader(imgStream));
 
 					 String line2;
 
-					 PrintWriter response2Writer = new PrintWriter("image.png", "UTF-8");
-
 					 while ((line2 = reader2.readLine()) != null) {
-						 System.out.println(line2);
-						 response2Writer.println(line2);
+						 System.out.println("NL" + line2);
 					 }*/
 				 }
 
