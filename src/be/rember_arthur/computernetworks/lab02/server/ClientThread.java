@@ -6,27 +6,27 @@ import java.net.*;
 /**
  * ClientThread is the threadable container around an TCP session with a client.
  */
-public class ClientThread implements Runnable  {
+class ClientThread implements Runnable  {
 
     private Socket socket;
 
-    public ClientThread(Socket socket) {
+    ClientThread(Socket socket) {
         this.socket = socket;
     }
 
     @Override
     public void run() {
+        System.out.println("New Client connected");
         try {
-            BufferedReader inFromClient = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            HTTPRequest request = new HTTPRequest(socket.getInputStream());
             DataOutputStream outToClient = new DataOutputStream(socket.getOutputStream());
-            socket.getInputStream().read();
-            String clientSentence = inFromClient.readLine();
+            /*String clientSentence = inFromClient.readLine();
             System.out.println("Received: " + clientSentence);
             String capsSentence = clientSentence.toUpperCase() + '\n';
-            outToClient.writeBytes(capsSentence);
+            outToClient.writeBytes(capsSentence);*/
             socket.close();
         } catch (Exception e) {
-            e.printStackTrace();
         }
+        System.out.println("Client disconnected");
     }
 }

@@ -1,7 +1,7 @@
 package be.rember_arthur.computernetworks.lab02.server;
 
-import java.io.*;
-import java.net.*;
+import java.net.ServerSocket;
+import java.net.Socket;
 
 public class HTTPServer {
 	public static void main(String argv[]) throws Exception
@@ -10,8 +10,8 @@ public class HTTPServer {
 	 while(true)
 	 {
 		 Socket connectionSocket = welcomeSocket.accept();
-		 ClientThread client = new ClientThread(connectionSocket);
-		 client.run();
+		 Thread client = new Thread( new ClientThread(connectionSocket));
+		 client.start();
 	 }
 	 }
 }
