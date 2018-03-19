@@ -11,25 +11,17 @@ import java.net.*;
 public class HTTPClient {
 	public static void main(String argv[]) throws Exception
 	 {
-		 /*if (argv.length < 1) return;
-
-		 URL url;
-
-		 try {
-			 url = new URL(argv[0]);
-		 } catch (MalformedURLException ex) {
-			 ex.printStackTrace();
-			 return;
-		 }
-
-		 String hostname = url.getHost();
-		 int port = 80;*/
+		 //if (argv.length < 1) return;
+		 //String command = argv[0];
+		 //String Uri = argv[1];
 
 		 //command, uri
-		 String[] testArg = {"GET", "www.google.be/?gfe_rd=cr&dcr=0&ei=9OOuWtqzFJKq8weHv5_wBw"};
+		 String[] testArg = {"GET", "www.google.be/?gfe_rd=cr&dcr=0&ei=k2uuWrPcHcOh4gTf44_ICQ&gws_rd=cr"};
 		 String command = testArg[0];
 		 String Uri = testArg[1];
-		 String hostname = Uri.substring(0, Uri.lastIndexOf(".") + 3); //voor .com, .org moet dit +4 zijn
+
+		 String hostname = Uri.substring(0, Uri.indexOf("/"));
+		 String path = Uri.substring(Uri.indexOf("/"));
 
 		 try (Socket socket = new Socket(hostname, 80)) {
 
@@ -38,7 +30,7 @@ public class HTTPClient {
 			 PrintWriter requestWriter = new PrintWriter(output, true);
 
 			 //form request
-			 requestWriter.println(command + " " + Uri + " HTTP/1.1");
+			 requestWriter.println(command + " " + path + " HTTP/1.1");
 			 requestWriter.println("Host: " + hostname);
 			 requestWriter.println("User-Agent: Simple Http Client");
 			 requestWriter.println("Accept: text/html");
@@ -53,7 +45,7 @@ public class HTTPClient {
 			 String line;
 			 PrintWriter responseWriter = new PrintWriter("response.html", "UTF-8");
 
-			 int imagesAmount = 0;
+			 int imagesAmount = 0; //to name images differently (image_1, image_2,...)
 
 			 while ((line = reader.readLine()) != null) {
 				 System.out.println(line);
@@ -80,7 +72,7 @@ public class HTTPClient {
 
 					 InputStream imgStream = socket.getInputStream();
 
-					 File file = new File("image" + imagesAmount+1 +".png");
+					 File file = new File("image_" + (imagesAmount+1) +".png");
 					 OutputStream outStream = new FileOutputStream(file);
 
 					 byte[] buffer = new byte[8 * 1024];
