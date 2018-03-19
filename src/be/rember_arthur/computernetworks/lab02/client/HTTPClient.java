@@ -7,6 +7,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.*;
+import java.util.Scanner;
 
 public class HTTPClient {
 	public static void main(String argv[]) throws Exception
@@ -16,12 +17,15 @@ public class HTTPClient {
 		 //String Uri = argv[1];
 
 		 //command, uri
-		 String[] testArg = {"GET", "www.google.be/?gfe_rd=cr&dcr=0&ei=k2uuWrPcHcOh4gTf44_ICQ&gws_rd=cr"};
+		 String[] testArg = {"POST", "www.tcpipguide.com/toc.htm"};
 		 String command = testArg[0];
 		 String Uri = testArg[1];
 
 		 String hostname = Uri.substring(0, Uri.indexOf("/"));
 		 String path = Uri.substring(Uri.indexOf("/"));
+
+		 Console cnsl = System.console();
+		 Scanner in = new Scanner(System.in);
 
 		 try (Socket socket = new Socket(hostname, 80)) {
 
@@ -35,8 +39,16 @@ public class HTTPClient {
 			 requestWriter.println("User-Agent: Simple Http Client");
 			 requestWriter.println("Accept: text/html");
 			 requestWriter.println("Accept-Language: en-US");
-			 //requestWriter.println("Connection: close");
+			 if (command == "HEAD")
+			 requestWriter.println("Connection: close");
 			 requestWriter.println();
+			 if (command == "POST" || command == "PUT") {
+				 //String input = cnsl.readLine();
+				 String input = in.next();
+				 requestWriter.println(input);
+				 System.out.println(input);
+				 requestWriter.println();
+			 }
 
 			 //get response
 			 InputStream input = socket.getInputStream();
@@ -54,20 +66,29 @@ public class HTTPClient {
 				 responseWriter.println(line);
 
 				 //filter all img tags, filter src attribute, get image urls
-				 if (line.contains("<img")) {
-				 String imgTags[] = line.split("<img");
+				 if (line.contains("<IMG") || line.contains("<img")) {
+					 String imgTags[];
+				 if (line.contains("<IMG"))
+				 	 imgTags = line.split("<IMG");
+				 else
+					 imgTags = line.split("<img");
+
 				 for (int i=1; i < imgTags.length; i++) {
-					 String srcAttributes[] = imgTags[i].split("src=\"");
+					 String srcAttributes[];
+					 if (line.contains("SRC="))
+						 srcAttributes = imgTags[i].split("SRC=\"");
+					 else
+						 srcAttributes = imgTags[i].split("src=\"");
 					 String srcUrl = srcAttributes[1].substring(0, srcAttributes[1].indexOf("\""));
 					 System.out.println(srcUrl);
 
 					 //GET images
-					 requestWriter.println(command + " " + hostname + srcUrl + " HTTP/1.1");
+					 requestWriter.println("GET " + "/" + srcUrl + " HTTP/1.1");
 					 requestWriter.println("Host: " + hostname);
 					 requestWriter.println("User-Agent: Simple Http Client");
 					 requestWriter.println("Accept: image/gif");
 					 requestWriter.println("Accept-Language: en-US");
-					 requestWriter.println("Connection: close"); // comment out after this works
+					 //requestWriter.println("Connection: close"); // comment out after this works
 					 requestWriter.println();
 
 					 InputStream imgStream = socket.getInputStream();
@@ -85,8 +106,8 @@ public class HTTPClient {
 
 				 }
 			 }
-
-			 responseWriter.close();
+			 //requestWriter.close();
+			 //responseWriter.close();
 
 		 } catch (UnknownHostException ex) {
 
